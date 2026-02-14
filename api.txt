@@ -1,0 +1,103 @@
+可调用的API接口列表
+健康模块
+POST /api/health/submit - 提交健康数据
+
+GET /api/health/latest/:deviceId - 获取最新健康数据
+
+GET /api/health/history/:deviceId - 获取历史健康数据
+
+GET /api/health/test - 健康模块测试
+
+设备模块
+GET /api/device/all - 获取所有设备
+
+GET /api/device/available - 获取可用设备列表
+
+POST /api/device/connect - 连接设备
+
+POST /api/device/disconnect - 断开设备连接
+
+DELETE /api/device/:deviceId - 删除设备
+
+音乐模块
+GET /api/music/all - 获取所有音乐
+
+POST /api/music/add - 添加音乐
+
+POST /api/music/batch - 批量添加音乐
+
+GET /api/music/search - 搜索音乐
+
+DELETE /api/music/:musicId - 删除音乐
+
+POST /api/music/test/add-sample - 添加示例音乐（测试）
+
+语音包模块
+GET /api/voice/all - 获取所有语音包
+
+POST /api/voice/add - 添加语音包
+
+POST /api/voice/set-active - 设置激活语音包
+
+GET /api/voice/active - 获取当前激活语音包
+
+DELETE /api/voice/:packId - 删除语音包
+
+POST /api/voice/test/add-sample - 添加示例语音包（测试）
+
+备忘录模块
+POST /api/memo/add - 添加备忘录
+
+GET /api/memo/device/:deviceId - 获取设备备忘录
+
+GET /api/memo/pending/:deviceId - 获取待发送备忘录
+
+PUT /api/memo/status/:id - 更新备忘录状态
+
+DELETE /api/memo/:id - 删除备忘录
+
+POST /api/memo/test/add-sample - 添加示例备忘录（测试）
+
+设置模块
+GET /api/settings/device/:deviceId - 获取设备设置
+
+PUT /api/settings/update - 更新设备设置
+
+PATCH /api/settings/update-single - 更新单个设置项
+
+POST /api/settings/test/init - 初始化设备设置（测试）
+
+系统接口
+GET / - API文档
+
+GET /health - 健康检查
+
+所有API都支持CORS，可在https://jpgrey.
+
+
+
+六大模块硬件接口：
+1，健康
+GET /api/hardware/health/submit?device_id=xxx&blood_pressure=xxx&blood_oxygen=xxx&heart_rate=xxx&temperature=xxx&humidity=xxx&latitude=xxx&longitude=xxx
+GET /api/hardware/health/latest?device_id=xxx
+2，设备连接
+GET /api/hardware/device/heartbeat?device_id=xxx&hb=80&status=connected
+GET /api/hardware/device/connect?device_id=xxx&device_name=xxx
+3，音乐模块
+GET /api/hardware/music/all
+GET /api/hardware/music/search?keyword=xxx
+4，语音包模块
+GET /api/hardware/voice/all
+GET /api/hardware/voice/active
+5，备忘录模块
+GET /api/hardware/memo/pending?device_id=xxx&limit=10
+GET /api/hardware/memo/sent?id=xxx
+6，自定义设置模块
+GET /api/hardware/settings/device?device_id=xxx
+GET /api/hardware/settings/update?device_id=xxx&laser_distance=xxx&slope_threshold=xxx&volume=
+
+
+测试接口
+GET /api/hardware/test
+上传健康数据
+http://localhost:3000/api/hardware/health/submit?device_id=asd&heart_rate=75&temperature=36.5&blood_pressure=120/80
