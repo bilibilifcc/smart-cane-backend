@@ -99,9 +99,9 @@ router.post('/test/init', async (req, res) => {
 
         const defaultSettings = {
             device_id: device_id,
-            laser_distance: 50,
+            laser_distance: 150,
             slope_threshold: 30.0,
-            volume: 80
+            volume: 7
         };
 
         const result = await Settings.updateSettings(defaultSettings);

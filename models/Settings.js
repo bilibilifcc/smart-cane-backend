@@ -44,9 +44,9 @@ class Settings {
                 // 返回默认设置
                 return {
                     device_id: deviceId,
-                    laser_distance: 50,
+                    laser_distance: 150,
                     slope_threshold: 30.0,
-                    volume: 80,
+                    volume: 7,
                     last_update: new Date().toISOString()
                 };
             }

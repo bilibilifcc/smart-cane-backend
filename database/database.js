@@ -98,9 +98,9 @@ class Database {
                 CREATE TABLE IF NOT EXISTS settings (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     device_id TEXT,
-                    laser_distance INTEGER DEFAULT 50,
+                    laser_distance INTEGER DEFAULT 150,
                     slope_threshold REAL DEFAULT 30.0,
-                    volume INTEGER DEFAULT 80,
+                    volume INTEGER DEFAULT 7,
                     last_update DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             `);
