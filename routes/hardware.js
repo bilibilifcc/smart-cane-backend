@@ -8,6 +8,7 @@ const Music = require('../models/Music');
 const Voice = require('../models/Voice');
 const Memo = require('../models/Memo');
 const Settings = require('../models/Settings');
+const Alert = require('../models/Alert');
 
 // ============================================================
 // 模块一：健康模块硬件接口
@@ -418,6 +419,79 @@ router.get('/settings/update', async (req, res) => {
     }
 });
 
+// ============================================================
+// 模块七：紧急报警模块硬件接口
+// ============================================================
+
+/**
+ * 下位机触发报警
+ * URL: /api/hardware/alert/trigger?device_id=xxx
+ */
+router.get('/alert/trigger', async (req, res) => {
+    try {
+        const { device_id } = req.query;
+
+        if (!device_id) {
+            return res.json({
+                success: false,
+                message: '缺少设备ID'
+            });
+        }
+
+        const result = await Alert.trigger(device_id);
+
+        res.json({
+            success: true,
+            message: '报警已记录',
+            data: result
+        });
+    } catch (error) {
+        console.error('触发报警失败:', error);
+        res.json({
+            success: false,
+            message: '服务器错误'
+        });
+    }
+});
+
+/**
+ * 小程序轮询检查是否有报警（最近 1 分钟内）
+ * URL: /api/hardware/alert/check?device_id=xxx
+ */
+router.get('/alert/check', async (req, res) => {
+    try {
+        const { device_id } = req.query;
+
+        if (!device_id) {
+            return res.json({
+                success: false,
+                message: '缺少设备ID'
+            });
+        }
+
+        const alert = await Alert.checkRecent(device_id);
+
+        if (alert) {
+            res.json({
+                success: true,
+                alert: true,
+                triggered_at: alert.triggered_at
+            });
+        } else {
+            res.json({
+                success: true,
+                alert: false
+            });
+        }
+    } catch (error) {
+        console.error('检查报警失败:', error);
+        res.json({
+            success: false,
+            message: '服务器错误'
+        });
+    }
+});
+
 /**
  * 硬件测试接口
  * URL: /api/hardware/test
@@ -429,11 +503,12 @@ router.get('/test', (req, res) => {
         timestamp: new Date().toISOString(),
         modules: [
             'health',
-            'device', 
+            'device',
             'music',
             'voice',
             'memo',
-            'settings'
+            'settings',
+            'alert'
         ]
     });
 });

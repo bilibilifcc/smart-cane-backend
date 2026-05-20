@@ -105,6 +105,15 @@ class Database {
                 )
             `);
 
+            // 紧急报警表
+            await this.run(`
+                CREATE TABLE IF NOT EXISTS alerts (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    device_id TEXT NOT NULL,
+                    triggered_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+
             console.log('数据库表初始化完成');
         } catch (error) {
             console.error('初始化数据库表失败:', error);
