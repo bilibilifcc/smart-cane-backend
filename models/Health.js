@@ -40,16 +40,27 @@ class Health {
     }
 
     // 获取设备的最新健康数据
+    // 对每个字段取最新的非 NULL 值，合并返回
     static async getLatestHealthData(deviceId) {
-        const sql = `
-            SELECT * FROM health_data 
-            WHERE device_id = ? 
-            ORDER BY timestamp DESC 
-            LIMIT 1
-        `;
-        
-        try { 
-            return await db.get(sql, [deviceId]);
+        try {
+            const result = await db.get(`
+                SELECT
+                    (SELECT blood_pressure FROM health_data WHERE device_id = ? AND blood_pressure IS NOT NULL ORDER BY timestamp DESC LIMIT 1) AS blood_pressure,
+                    (SELECT blood_oxygen FROM health_data WHERE device_id = ? AND blood_oxygen IS NOT NULL ORDER BY timestamp DESC LIMIT 1) AS blood_oxygen,
+                    (SELECT heart_rate FROM health_data WHERE device_id = ? AND heart_rate IS NOT NULL ORDER BY timestamp DESC LIMIT 1) AS heart_rate,
+                    (SELECT temperature FROM health_data WHERE device_id = ? AND temperature IS NOT NULL ORDER BY timestamp DESC LIMIT 1) AS temperature,
+                    (SELECT humidity FROM health_data WHERE device_id = ? AND humidity IS NOT NULL ORDER BY timestamp DESC LIMIT 1) AS humidity,
+                    (SELECT latitude FROM health_data WHERE device_id = ? AND latitude IS NOT NULL ORDER BY timestamp DESC LIMIT 1) AS latitude,
+                    (SELECT longitude FROM health_data WHERE device_id = ? AND longitude IS NOT NULL ORDER BY timestamp DESC LIMIT 1) AS longitude,
+                    (SELECT timestamp FROM health_data WHERE device_id = ? ORDER BY timestamp DESC LIMIT 1) AS timestamp
+            `, Array(8).fill(deviceId));
+
+            // 如果所有字段都是 NULL，返回 null
+            if (!result || Object.values(result).every(v => v === null)) {
+                return null;
+            }
+
+            return result;
         } catch (error) {
             throw error;
         }
